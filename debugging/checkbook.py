@@ -1,45 +1,53 @@
 #!/usr/bin/python3
-class Checkbook:
-    def __init__(self):
-        self.balance = 0.0
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 5)
 
-    def deposit(self, amount):
-        self.balance += amount
-        print("Deposited ${:.2f}".format(amount))
-        print("Current Balance: ${:.2f}".format(self.balance))
+def check_winner(board):
+    for row in board:
+        if row.count(row[0]) == len(row) and row[0] != " ":
+            return True
 
-    def withdraw(self, amount):
-        if amount > self.balance:
-            print("Insufficient funds to complete the withdrawal.")
-        else:
-            self.balance -= amount
-            print("Withdrew ${:.2f}".format(amount))
-            print("Current Balance: ${:.2f}".format(self.balance))
+    for col in range(len(board[0])):
+        if board[0][col] == board[1][col] == board[2][col] and board[0][col] != " ":
+            return True
 
-    def get_balance(self):
-        print("Current Balance: ${:.2f}".format(self.balance))
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] != " ":
+        return True
 
-def main():
-    cb = Checkbook()
-    while True:
-        action = input("What would you like to do? (deposit, withdraw, balance, exit): ")
-        if action.lower() == 'exit':
-            break
-        elif action.lower() == 'deposit':
-            try:
-                amount = float(input("Enter the amount to deposit: $"))
-            except ValueError:
-                print("Invalid amount. Please enter a valid numeric amount.")
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] != " ":
+        return True
+
+    return False
+
+def is_board_full(board):
+    for row in board:
+        if " " in row:
+            return False
+    return True
+
+def tic_tac_toe():
+    board = [[" "]*3 for _ in range(3)]
+    player = "X"
+    while not check_winner(board) and not is_board_full(board):
+        print_board(board)
+        try:
+            row = int(input("Enter row (0, 1, or 2) for player " + player + ": "))
+            col = int(input("Enter column (0, 1, or 2) for player " + player + ": "))
+            if board[row][col] == " ":
+                board[row][col] = player
+                player = "O" if player == "X" else "X"
             else:
-                cb.deposit(amount)
-        elif action.lower() == 'withdraw':
-            amount = float(input("Enter the amount to withdraw: $"))
-            cb.withdraw(amount)
-        elif action.lower() == 'balance':
-            cb.get_balance()
-        else:
-            print("Invalid command. Please try again.")
+                print("That spot is already taken! Try again.")
+        except (ValueError, IndexError):
+            print("Invalid input! Please enter a valid row and column number.")
 
-if __name__ == "__main__":
-    main()
+    print_board(board)
+    if check_winner(board):
+        print("Player " + player + " wins!")
+    else:
+        print("It's a draw!")
+
+tic_tac_toe()
 
