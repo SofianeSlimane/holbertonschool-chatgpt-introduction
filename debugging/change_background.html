@@ -24,8 +24,10 @@
 <button id="colorButton">Change Color</button>
 
 <script>
-    document.getElementById("colorButton").addEventListener("click", function() {
-        changeBackgroundColor();
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("colorButton").addEventListener("click", function() {
+            changeBackgroundColor();
+        });
     });
 
     function changeBackgroundColor() {
@@ -38,3 +40,4 @@
 
 </body>
 </html>
+
